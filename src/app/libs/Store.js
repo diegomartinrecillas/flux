@@ -6,30 +6,28 @@ export default class Store extends EventEmitter{
     /**
     * @constructor
     * @this {Store}
-    * @param {string} name The name of the store
-    * @param {boolean} debug Set the state of the debugger
+    * @param {string} name - The name of the store
+    * @param {boolean} debug - Set the state of the debugger
     */
     constructor(name, debug = false) {
         if (name == null || name == undefined) {
             throw `Store.constructor: Stores must be named`;
         }
         super();
-        // Set debug flag for the logger
+        // Set debug flag for the debug logger
         this._isDebugging = debug;
         // Store private propertires
         this._storeName = name;
         this._storeState = {};
+        // Debug logger
         this._log(`STORE [${this._storeName}]: Initializing`);
     }
 
-    addActionListener(action, callback) {
-        if (action.constructor.name !== 'Action') {
-            throw `Action.addActionListener: Not an Action type`
-        }
+    bindAction(action, callback) {
         action.on(ACTION_DISPATCH_EVENT, callback);
     }
-
-    removeActionListener(action, callback) {
+    
+    unbindAction(action, callback) {
         action.off(ACTION_DISPATCH_EVENT, callback);
     }
 
@@ -41,45 +39,56 @@ export default class Store extends EventEmitter{
         this.off(STORE_CHANGE_EVENT, callback);
     }
 
+    /**
+    * Updates the Store's state and tells the Store to emmit a change event.
+    * @param {object} state - State to be set into the store's state.
+    */
     setState(state) {
         for (let key in state) {
             if (key in this._storeState) {
                 this._storeState[key] = _.cloneDeep(state[key]);
             } else {
-                throw `Store.setState: state key ${key} not defined in STORE [${this.name}]`
+                throw `Store.setState: key ${key} not defined in STORE [${this.name}] state`
             }
         }
-        this.update();
+        this.emmitChange();
     }
 
-    update() {
-        this._log(`STORE [${this.name}]: State has been updated`);
+    /**
+    * Emmits a STORE_CHANGE_EVENT
+    */
+    emmitChange() {
+        // Debug logger
+        this._log(`STORE [${this.name}]: has changed`);
         this.emit(STORE_CHANGE_EVENT);
     }
 
     /**
-    * Store name getter
+    * Store name getter.
+    * @return {string} - The Store's name.
     */
     get name() {
         return this._storeName;
     }
     /**
-    * Store state getter
+    * Immutable Store's state getter.
+    * @return {object} - A copy of the Store's state.
     */
     get state() {
-        //return _.cloneDeep(this._storeState);
-        return this._storeState;
+        return _.cloneDeep(this._storeState);
     }
     /**
-    * Store state setter
+    * Immutable Store's state setter.
+    * @param {object} state - State to be set.
     */
     set state(state) {
         this._storeState = _.cloneDeep(state);
     }
 
     /**
-    * Helper function function that logs based on this._isDebugging state
-    * @param {string} log message to be logged
+    * Helper function function that logs based on this._isDebugging state.
+    * @param {string} log - Message to be logged.
+    * @param {array} args - Any number of extra data passed to the logger.
     */
     _log(log, ...args) {
         if (this._isDebugging) {

@@ -1,7 +1,7 @@
 import Store from 'app/libs/Store';
 import TestActions from 'app/actions/TestActions';
 
-// Set DEBUG=true to log every step in the console
+// Set DEBUG=true to log all events to the console
 const DEBUG = true;
 
 class TestSore extends Store {
@@ -11,12 +11,13 @@ class TestSore extends Store {
         this.state = {
             firstName: 'Diego',
             lastName: 'Martin',
-            arr: ['x ']
+            arr: [0]
         }
 
-        this.addActionListener(TestActions.testAction1, this.onSetNewData);
-        this.addActionListener(TestActions.testAction2, this.onResetData);
-        this.addActionListener(TestActions.testAction3, this.onAddArrElement);
+        this.bindAction(TestActions.testAction1, this.onSetNewData);
+        this.bindAction(TestActions.testAction2, this.onResetData);
+        this.bindAction(TestActions.testAction3, this.onAddArrElement);
+
     }
 
     onSetNewData = (data) => {
@@ -28,13 +29,17 @@ class TestSore extends Store {
 
     onResetData = () => {
         this.setState({
-            firstName: 'Diego'
+            firstName: 'Diego',
+            lastName: 'Martin'
         })
     }
 
     onAddArrElement = () => {
-        this.state.arr.push('x ');
-        this.update();
+        let arr = this.state.arr;
+        arr.push(arr[arr.length - 1] + 1);
+        this.setState({
+            arr: arr
+        });
     }
 }
 

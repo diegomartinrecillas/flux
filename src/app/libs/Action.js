@@ -6,8 +6,8 @@ export default class Action extends EventEmitter{
     /**
     * @constructor
     * @this {action}
-    * @param {string} name The name of the action
-    * @param {boolean} debug Set the state of the debugger
+    * @param {string} name - The name of the action
+    * @param {boolean} debug - Set the state of the debugger
     */
     constructor(name, debug = false) {
         if (name == null || name == undefined) {
@@ -27,6 +27,10 @@ export default class Action extends EventEmitter{
         } else {
             this._log(`ACTION [${this.name}]: Dispatching with no data`);
         }
+        this.emmitDispatch(data);
+    }
+
+    emmitDispatch(data) {
         this.emit(ACTION_DISPATCH_EVENT, data);
     }
 

@@ -14,7 +14,7 @@ export default class Main extends React.Component {
     componentDidMount() {
         TestStore.subscribe(this._onUpdate);
         setTimeout(() => {
-            TestStore.update();
+            TestStore.emmitChange();
         }, 1000);
     }
     componentWillUnmount() {
