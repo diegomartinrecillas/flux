@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import lodash from 'lodash';
+import { cloneDeep } from 'lodash';
 import { STORE_CHANGE_EVENT, ACTION_DISPATCH_EVENT } from './Constants';
 
 export default class Store extends EventEmitter{
@@ -23,18 +23,36 @@ export default class Store extends EventEmitter{
         this._log(`STORE [${this._storeName}]: Initializing`);
     }
 
-    bindAction(action, callback) {
+    /**
+    * Starts lisssstening to an Action's dispatch event and binds a callback to it.
+    * @param {object} action - The Action we will listen to.
+    * @param {callback} callback - The callback we will bind to the Action.
+    */
+    listenTo(action, callback) {
         action.on(ACTION_DISPATCH_EVENT, callback);
     }
-    
-    unbindAction(action, callback) {
+
+    /**
+    * Stops listening to an Action's dispatch event and unbinds a callback to it.
+    * @param {object} action - The Action we will listen to.
+    * @param {function} callback - The callback we will unbind to the Action.
+    */
+    unlistenTo(action, callback) {
         action.off(ACTION_DISPATCH_EVENT, callback);
     }
 
+    /**
+    * Subscribes a component to the Store.
+    * @param {function} callback - The callback executed when the Store changes.
+    */
     subscribe(callback) {
         this.on(STORE_CHANGE_EVENT, callback);
     }
 
+    /**
+    * Unsubscribes a component to the Store.
+    * @param {function} callback - The callback executed when the Store changes.
+    */
     unsubscribe(callback) {
         this.off(STORE_CHANGE_EVENT, callback);
     }
@@ -46,7 +64,7 @@ export default class Store extends EventEmitter{
     setState(state) {
         for (let key in state) {
             if (key in this._storeState) {
-                this._storeState[key] = _.cloneDeep(state[key]);
+                this._storeState[key] = cloneDeep(state[key]);
             } else {
                 throw `Store.setState: key ${key} not defined in STORE [${this.name}] state`
             }
@@ -55,7 +73,7 @@ export default class Store extends EventEmitter{
     }
 
     /**
-    * Emmits a STORE_CHANGE_EVENT
+    * Emmits a change event to all sunscribed components.
     */
     emmitChange() {
         // Debug logger
@@ -82,7 +100,7 @@ export default class Store extends EventEmitter{
     * @param {object} state - State to be set.
     */
     set state(state) {
-        this._storeState = _.cloneDeep(state);
+        this._storeState = cloneDeep(state);
     }
 
     /**

@@ -14,9 +14,9 @@ class TestSore extends Store {
             arr: [0]
         }
 
-        this.bindAction(TestActions.testAction1, this.onSetNewData);
-        this.bindAction(TestActions.testAction2, this.onResetData);
-        this.bindAction(TestActions.testAction3, this.onAddArrElement);
+        this.listenTo(TestActions.testAction1, this.onSetNewData);
+        this.listenTo(TestActions.testAction2, this.onResetData);
+        this.listenTo(TestActions.testAction3, this.onAddArrElement);
 
     }
 

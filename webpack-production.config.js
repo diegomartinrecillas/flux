@@ -43,9 +43,8 @@ const config = {
     module: {
         loaders: [
             {
-                // React-hot loader
                 test: /\.jsx?$/, // All .jsx files
-                loaders: ['babel-loader'], // react-hot is like browser sync and babel loads jsx and es6-7
+                loaders: ['babel-loader'], // babel loads jsx and es6-7
                 exclude: [nodeModulesPath]
             }
         ]

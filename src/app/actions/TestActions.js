@@ -7,7 +7,7 @@ class AsyncAction extends Action {
     // Overriding the default dispatch method.
     dispatch(data) {
         // For example:
-            // If we move all the async functionality to the Actions we can turn the Stores completely synchronus.
+        // If we move all the async functionality to the Actions we can turn the Stores completely synchronus.
         setTimeout(() => {
             // Emmit a dispatch event manually when we need it.
             this.emmitDispatch(data);

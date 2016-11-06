@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import { ACTION_DISPATCH_EVENT } from './Constants';
-import lodash from 'lodash';
 
 export default class Action extends EventEmitter{
     /**
